@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>It's Okay 😢</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  height:100vh;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:sans-serif;
+  background: linear-gradient(135deg,#ff7aa2,#ff9ac1);
+  overflow:hidden;
+  position:relative;
+}
+
+/* Particles */
+.particle {
+  position:absolute;
+  pointer-events:none;
+  opacity:0;
+  transform: scale(0);
+  animation: float 3s forwards;
+  z-index:0;
+}
+
+.sparkle { border-radius:50%; }
+
+.heart {
+  position:absolute;
+  width:8px; height:8px;
+  background:red;
+  transform: rotate(-45deg);
+}
+.heart::before, .heart::after {
+  content:'';
+  position:absolute;
+  width:8px; height:8px;
+  background:red;
+  border-radius:50%;
+}
+.heart::before { top:-4px; left:0; }
+.heart::after { top:0; left:4px; }
+
+@keyframes float {
+  0% { opacity:0; transform:translate(var(--x,0),0px) scale(var(--scale,0.5)) rotate(0deg);}
+  20% { opacity:1; }
+  100% { opacity:0; transform:translate(calc(var(--x,0)+30px), -200px) scale(var(--scale,1)) rotate(360deg);}
+}
+
+/* Glass message */
+.glass-box {
+  width: 350px;
+  padding: 30px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  text-align: center;
+  z-index: 2;
+  font-weight: bold;
+}
+
+.glass-box h1 { font-size:2em; margin-bottom:20px; }
+.glass-box p { font-size:1.2em; }
+</style>
+</head>
+<body>
+
+<div class="glass-box">
+  <h1>It's okay</h1>
+  <p>Thank you for being honest.<br>I respect your feelings  and boundries. take care</p>
+</div>
+
+<script>
+// Particle system
+const colors=['#fff','#ffe1f5','#fff6a5','#ffb6c1','#ffd1dc'];
+function createParticle(){
+  const container=document.body;
+  const isHeart=Math.random()<0.3;
+  const p=document.createElement('div');
+  p.classList.add('particle',isHeart?'heart':'sparkle');
+  const size=Math.random()*8+4;
+  const left=Math.random()*window.innerWidth;
+  const top=Math.random()*window.innerHeight;
+  const sway=(Math.random()-0.5)*50;
+  const scale=Math.random()*0.6+0.4;
+  p.style.setProperty('--x',sway+'px');
+  p.style.setProperty('--scale',scale);
+  p.style.width=size+'px';
+  p.style.height=size+'px';
+  p.style.left=left+'px';
+  p.style.top=top+'px';
+  if(!isHeart)p.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+  p.style.animationDuration=(2+Math.random()*2)+'s';
+  container.appendChild(p);
+  setTimeout(()=>p.remove(),4000);
+}
+setInterval(createParticle,150);
+</script>
+
+</body>
+</html>

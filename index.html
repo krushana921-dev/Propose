@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You</title>
+<style>
+* { box-sizing: border-box; margin:0; padding:0; font-family: system-ui, sans-serif; }
+body {
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(135deg, #ff7aa2, #ff9ac1);
+  overflow:hidden;
+  position: relative;
+}
+
+.container {
+  text-align:center;
+  max-width:90%;
+  width:400px;
+  padding:24px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  border:1px solid rgba(255,255,255,0.25);
+  animation: zoomIn 0.6s ease forwards;
+  position: relative;
+  z-index:2;
+}
+
+h1 {
+  font-size:1.6rem;
+  margin-bottom:32px;
+  color:#fff;
+}
+
+button {
+  background:transparent;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.4);
+  padding:12px 28px;
+  border-radius:999px;
+  font-size:0.95rem;
+  cursor:pointer;
+  transition: all 0.25s ease;
+}
+button:hover, button:focus {
+  background:#fff;
+  color:#0f0f0f;
+}
+
+@keyframes zoomIn { 0% { transform: scale(0.7); opacity:0; } 100% { transform: scale(1); opacity:1; } }
+
+/* Particle styles */
+.particle {
+  position:absolute;
+  pointer-events:none;
+  opacity:0;
+  transform:scale(0);
+  animation: float 3s forwards;
+  z-index:1;
+}
+.sparkle { border-radius:50%; }
+.heart {
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:red;
+  transform:rotate(-45deg);
+}
+.heart::before, .heart::after {
+  content:'';
+  position:absolute;
+  width:8px; height:8px;
+  background:red;
+  border-radius:50%;
+}
+.heart::before { top:-4px; left:0; }
+.heart::after { top:0; left:4px; }
+
+@keyframes float {
+  0% { opacity:0; transform:translate(var(--x,0),0px) scale(var(--scale,0.5)) rotate(0deg);}
+  20% { opacity:1; }
+  100% { opacity:0; transform:translate(calc(var(--x,0)+30px), -200px) scale(var(--scale,1)) rotate(360deg);}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Hey Vedika,I Want To Tell You Something👀</h1>
+  <button id="openBtn">Open</button>
+</div>
+
+
+
+<script>
+const colors = ['#fff','#ffe1f5','#fff6a5','#ffb6c1','#ffd1dc'];
+const containerBody = document.body;
+
+function createParticle(originX, originY){
+  const isHeart = Math.random() < 0.3;
+  const p = document.createElement('div');
+  p.classList.add('particle', isHeart ? 'heart' : 'sparkle');
+
+  const size = Math.random()*8+4;
+  const sway = (Math.random()-0.5)*50;
+  const scale = Math.random()*0.6+0.4;
+
+  p.style.setProperty('--x', sway+'px');
+  p.style.setProperty('--scale', scale);
+  p.style.width = size+'px';
+  p.style.height = size+'px';
+  p.style.left = originX+'px';
+  p.style.top = originY+'px';
+  if(!isHeart) p.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+  p.style.animationDuration = (2+Math.random()*2)+'s';
+
+  containerBody.appendChild(p);
+  setTimeout(()=>p.remove(),4000);
+}
+
+// Generate particles around button
+const openBtn = document.getElementById('openBtn');
+openBtn.addEventListener('mouseenter', (e)=>{
+  const rect = openBtn.getBoundingClientRect();
+  createParticle(rect.left + rect.width/2, rect.top + rect.height/2);
+});
+
+// Continuous small background particles
+setInterval(()=>{
+  createParticle(Math.random()*window.innerWidth, Math.random()*window.innerHeight);
+}, 300);
+
+// Redirect on click
+openBtn.addEventListener('click', ()=>{
+  window.location.href='letter.html';
+});
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Honestly</title>
+
+<!-- Archivo Black font from Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff7aa2, #ff9ac1);
+    font-family: "Segoe UI", sans-serif;
+  }
+
+  /* 🌸 Flower particles */
+  .flower {
+    position: absolute;
+    top: -10%;
+    font-size: 18px;
+    opacity: 0.8;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); }
+    100% { transform: translateY(110vh) rotate(360deg); }
+  }
+
+  /* 💌 Center card */
+  .container {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    padding: 30px;
+    width: 85%;
+    max-width: 620px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    animation: zoomIn 0.9s ease forwards;
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  @keyframes zoomIn {
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  #text {
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    min-height: 280px;
+  }
+
+  /* Bold standout text using Archivo Black */
+  #text strong {
+    font-family: 'Archivo Black';
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .skip-container {
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .skip-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    background: #fff;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+  }
+
+  .skip-btn:hover {
+    transform: scale(1.08);
+  }
+
+  .buttons {
+    display: none;
+    margin-top: 25px;
+    text-align: center;
+  }
+
+  .buttons button {
+    border: none;
+    padding: 12px 28px;
+    font-size: 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 0 12px;
+    transition: transform 0.2s ease;
+  }
+
+  .buttons button:hover {
+    transform: scale(1.08);
+  }
+
+  .yes { background: #3fb950; color: white; }
+  .no { background: #e5533d; color: white; }
+
+</style>
+</head>
+
+<body>
+
+<!-- 🔊 Background Music -->
+<audio id="bgMusic" src="bg-music.mp3" loop></audio>
+
+<!-- 🌸 Flower Particles -->
+<script>
+  const flowers = ["🌸","🌺","🌷","💮"];
+  for (let i = 0; i < 30; i++) {
+    const f = document.createElement("div");
+    f.className = "flower";
+    f.textContent = flowers[Math.floor(Math.random()*flowers.length)];
+    f.style.left = Math.random() * 100 + "vw";
+    f.style.animationDuration = (6 + Math.random() * 6) + "s";
+    f.style.fontSize = (14 + Math.random() * 14) + "px";
+    document.body.appendChild(f);
+  }
+</script>
+
+<div class="container">
+  <div class="card">
+    <div id="text"></div>
+
+    <div class="skip-container">
+      <button class="skip-btn" id="skipBtn">Skip ⏩</button>
+    </div>
+
+    <div class="buttons" id="buttons">
+      <button class="yes" onclick="location.href='yes.html'">Yes 💖</button>
+      <button class="no" onclick="location.href='no.html'">No 😢</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= MUSIC ================= */
+const bgMusic = document.getElementById("bgMusic");
+if (localStorage.getItem("soundEnabled") === "true") {
+  bgMusic.volume = 0.3;
+  bgMusic.play().catch(() => {});
+}
+function unlockMusic() {
+  bgMusic.volume = 0.3;
+  bgMusic.play().then(() => localStorage.setItem("soundEnabled", "true"))
+    .catch(() => {});
+  document.removeEventListener("click", unlockMusic);
+  document.removeEventListener("touchstart", unlockMusic);
+}
+document.addEventListener("click", unlockMusic);
+document.addEventListener("touchstart", unlockMusic);
+
+/* ================= TYPING EFFECT + SKIP ================= */
+const message = `Hey Vedika,
+I was confused about whether I should say this or just let it stay in my head. I didn’t want to be impulsive, but I also didn’t want future me to say, “bro, you should’ve just said it.”
+
+When we talked after my birthday, it was a simple moment a walk, a conversation, and a chocolate. Nothing dramatic. But it stayed with me because it felt easy and genuinely nice.
+
+The second time we talked during the hackathon registration, I enjoyed it even more. I normally talk without any problem, but around you I get a little nervous. I just end up listening to you… and yeah, your small gestures and the way you speak are a distraction 😅.
+
+At first, I didn’t really like you. I just found you interesting. Over time, naturally, that changed. I started liking you calmly, genuinely, no overthinking (maybe a little overthinking).
+
+So I’ll say it simply:
+I like you.
+
+If you ever feel curious to explore something slowly, casually, no pressure I’d like that.
+And if not, that’s okay too. I just wanted to be honest once and not keep this stuck in my head.
+
+Either way, I’m good with the truth 🙂
+
+Take care.`;
+
+let i = 0;
+const speed = 22;
+const textEl = document.getElementById("text");
+const buttons = document.getElementById("buttons");
+const skipBtn = document.getElementById("skipBtn");
+let typingTimeout;
+
+function typeText() {
+  if (i < message.length) {
+    textEl.textContent += message.charAt(i);
+    i++;
+    typingTimeout = setTimeout(typeText, speed);
+  } else {
+    buttons.style.display = "block";
+    skipBtn.style.display = "none";
+  }
+}
+
+// Start typing
+typeText();
+
+// Skip button functionality
+skipBtn.addEventListener("click", () => {
+  clearTimeout(typingTimeout);
+  textEl.textContent = message;
+  buttons.style.display = "block";
+  skipBtn.style.display = "none";
+});
+</script>
+
+</body>
+</html>
